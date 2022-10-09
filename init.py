@@ -104,8 +104,7 @@ for tool in tools:
         
         ## More Details
         
-        See the [main repository](https://github.com/install-pinned/overview) for details.
-
+        See the [@install-pinned README](https://github.com/install-pinned) for details.
         """,
     )
     write(

@@ -25,17 +25,22 @@ To mitigate this problem, you should _pin_ your dependencies, i.e. use a `requir
 that ensures only specific versions (with specific file hashes) are allowed. This changes the threat model from "trust 
 continuously" to "trust on first use".
 
-#### What is @install-pinned for?
+[^1]: More specifically, you hope that the respective PyPI packages are not compomised at the same time when your CI 
+      runs.
+[^2]: By default, `GITHUB_TOKEN` can push new commits, which can be used to obtain all secrets defined for a repository.
+
+#### What are the actions here for?
 
 The actions available in this GitHub organization allow you to securely (i.e. with pinning + hashes) install popular 
-tools to use in your CI pipeline without any additional lockfiles. 
+tools to use in your CI pipeline without any additional lock files. 
 
 For example, you maybe want to run [black](https://github.com/psf/black) in your CI pipeline, but black is not a 
 dependency for your application. Instead of adding a separate lock file to your repository, you just use the [install-pinned/black](https://github.com/install-pinned/black) action.
 
-[^1]: More specifically, you hope that the respective PyPI packages are not compomised at the same time when your CI 
-      runs.
-[^2]: By default, `GITHUB_TOKEN` can push new commits, which can be used to obtain all secrets defined for a repository.
+#### Why should I not use this?
+
+By pinning your tools, the dependency graph becomes static. 
+This means that you will not automatically get new (security) updates.
 
 #### Supported tools:
 {tool_list}
