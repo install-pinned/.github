@@ -5,8 +5,9 @@
   "blacken-docs",
   "docformatter",
   "isort",
+  "pip-tools",
   "pyupgrade",
-  "reorder-python-imports",
+  "reorder_python_imports",
   "usort",
   "yapf",
   "yesqa"

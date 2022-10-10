@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import os
+import re
 import shutil
 import stat
 from pathlib import Path
@@ -73,6 +74,10 @@ for tool in tools:
     # modify one of this pins to make sure that the CI runs.
     write("pins/requirements-3.10.txt", "")
 
+    try:
+        last_release = re.search(r"(?<=@)[0-9a-f]{40}.+", Path("README.md").read_text())[0]
+    except Exception:
+        last_release = "ffffffffffffffffffffffffffffffffffffffff"
     write(
         "README.md",
         f"""
@@ -81,7 +86,7 @@ for tool in tools:
         
         ![](https://shields.io/badge/python-{'%20%7C%20'.join(python_versions)}-blue)
         
-        Securely install the latest {tool} release from PyPI.
+        Securely install the latest [{tool}](https://pypi.org/project/{tool}/) release from PyPI.
         
         This action installs a pinned version of **{tool}** and all its dependencies, \
         making sure that file hashes match. Pinning your dependencies stops supply chain attacks where an adversary \
@@ -93,7 +98,7 @@ for tool in tools:
         
         ```yaml
         - name: Install {tool} from PyPI
-          uses: install-pinned/{tool}@ffffffffffffffffffffffffffffffffffffffff
+          uses: install-pinned/{tool}@{last_release}
         ```
         
         ## Alternatives
