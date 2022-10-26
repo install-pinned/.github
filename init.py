@@ -97,8 +97,8 @@ for tool in tools:
         In your GitHub Actions workflow, use this action like so:
         
         ```yaml
-        - name: Install {tool} from PyPI
-          uses: install-pinned/{tool}@{last_release}
+              - name: Install {tool} from PyPI
+                uses: install-pinned/{tool}@{last_release}
         ```
         
         ## Alternatives
