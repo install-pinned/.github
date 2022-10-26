@@ -22,7 +22,7 @@ client = httpx.Client(
 repos_dir = (Path(__file__).parent / "repos").absolute()
 
 tools = json.loads(Path("tools.json").read_text())
-python_versions = ["3.7", "3.8", "3.9", "3.10"]
+python_versions = ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
 if False:
     for tool in tools:
@@ -72,7 +72,7 @@ for tool in tools:
         f.write_text(dedent(contents), encoding="utf-8", newline="\n")
 
     # modify one of this pins to make sure that the CI runs.
-    write("pins/requirements-3.10.txt", "")
+    # write("pins/requirements-3.10.txt", "")
 
     try:
         last_release = re.search(r"(?<=@)[0-9a-f]{40}.+", Path("README.md").read_text())[0]
@@ -140,7 +140,7 @@ for tool in tools:
             - uses: actions/setup-python@v4
               with:
                 python-version: '{py}'
-            - uses: install-pinned/pip-tools@41f7e8a0605d3487afde2503a5b352b2126b0873  # 6.9.0
+            - run: pip install pip-tools==6.9.0
             - run: pip-compile --allow-unsafe --generate-hashes pins/requirements.in -o pins/requirements-{py}.txt 
             """.rstrip()
         )

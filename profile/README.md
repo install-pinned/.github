@@ -1,5 +1,7 @@
 ## Keep your CI pipeline secure with pinned installs.
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 <!-- auto-generated from make_readme.py, do not edit manually -->
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
 When you `pip install foo` in your CI pipeline, you trust 
 
@@ -7,19 +9,20 @@ When you `pip install foo` in your CI pipeline, you trust
  - the authors of `foo`, and 
  - all authors of all (sub)dependencies of `foo`
  
-to keep their systems secure at all times.[^1] If only one of them is compromised,
-they may push a malicious package to PyPI which steals your code and your repository secrets.[^2]
+to not be compromised at this point in time.[^1] If one of them is, an attacker may have pushed a malicious package to 
+PyPI, which steals your code and your repository secrets (e.g. deployment tokens).[^2]
 To mitigate this problem, you should _pin_ your dependencies, i.e. use a `requirements.txt`/`poetry.lock`/... lock file
 that ensures only specific versions (with specific file hashes) are allowed. This changes the threat model from "trust 
 continuously" to "trust on first use".
 
 [^1]: More specifically, you hope that the respective PyPI packages are not compomised at the same time when your CI 
       runs.
-[^2]: By default, `GITHUB_TOKEN` can push new commits, which can be used to obtain all secrets defined for a repository.
+[^2]: This often includes GitHub secrets that are not available to the current workflow.
+      By default, `GITHUB_TOKEN` can push new commits, which can be used to rewrite workflows and obtain other secrets.
 
 #### What are the actions here for?
 
-The actions available in this GitHub organization allow you to securely (i.e. with pinning + hashes) install popular 
+The actions provided here allow you to securely (i.e. with pinning + hashes) install popular 
 tools to use in your CI pipeline without any additional lock files. 
 
 For example, you maybe want to run [black](https://github.com/psf/black) in your CI pipeline, but black is not a 
@@ -37,8 +40,11 @@ This means that you will not automatically get new (security) updates.
 - [blacken-docs](https://github.com/install-pinned/blacken-docs)
 - [docformatter](https://github.com/install-pinned/docformatter)
 - [isort](https://github.com/install-pinned/isort)
+- [maturin](https://github.com/install-pinned/maturin)
+- [pdoc](https://github.com/install-pinned/pdoc)
+- [pip-tools](https://github.com/install-pinned/pip-tools)
 - [pyupgrade](https://github.com/install-pinned/pyupgrade)
-- [reorder-python-imports](https://github.com/install-pinned/reorder-python-imports)
+- [reorder_python_imports](https://github.com/install-pinned/reorder_python_imports)
 - [usort](https://github.com/install-pinned/usort)
 - [yapf](https://github.com/install-pinned/yapf)
 - [yesqa](https://github.com/install-pinned/yesqa)

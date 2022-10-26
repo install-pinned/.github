@@ -5,6 +5,8 @@
   "blacken-docs",
   "docformatter",
   "isort",
+  "maturin",
+  "pdoc",
   "pip-tools",
   "pyupgrade",
   "reorder_python_imports",
