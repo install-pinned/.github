@@ -9,8 +9,8 @@ When you `pip install foo` in your CI pipeline, you trust
  - the authors of `foo`, and 
  - all authors of all (sub)dependencies of `foo`
  
-to not be compromised at this point in time.[^1] If one of them is, an attacker may have pushed a malicious package to 
-PyPI, which steals your code and your repository secrets (e.g. deployment tokens).[^2]
+to not be compromised.[^1] If one of them is, an attacker may push a malicious package to PyPI which steals your code 
+and your repository secrets (e.g. deployment tokens).[^2]
 To mitigate this problem, you should _pin_ your dependencies, i.e. use a `requirements.txt`/`poetry.lock`/... lock file
 that ensures only specific versions (with specific file hashes) are allowed. This changes the threat model from "trust 
 continuously" to "trust on first use".
@@ -45,6 +45,7 @@ This means that you will not automatically get new (security) updates.
 - [pip-tools](https://github.com/install-pinned/pip-tools)
 - [pyupgrade](https://github.com/install-pinned/pyupgrade)
 - [reorder_python_imports](https://github.com/install-pinned/reorder_python_imports)
+- [ruff](https://github.com/install-pinned/ruff)
 - [usort](https://github.com/install-pinned/usort)
 - [yapf](https://github.com/install-pinned/yapf)
 - [yesqa](https://github.com/install-pinned/yesqa)

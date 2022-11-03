@@ -24,35 +24,36 @@ repos_dir = (Path(__file__).parent / "repos").absolute()
 tools = json.loads(Path("tools.json").read_text())
 python_versions = ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
-if False:
-    for tool in tools:
-        resp = client.post(
-            "https://api.github.com/orgs/install-pinned/repos",
-            json={
-                "name": tool,
-                "license_template": "mit",
-            },
-        )
-        print(resp)
-        print(resp.read())
-
-if False:
-    for tool in tools:
-        resp = client.patch(
-            f"https://api.github.com/repos/install-pinned/{tool}",
-            json={
-                "description": f"Securely install the latest {tool} release from PyPI.",
-                "homepage": "https://github.com/install-pinned",
-                "private": False,
-                "has_issues": False,
-                "has_projects": False,
-                "has_wiki": False,
-            },
-        )
-        print(resp)
-        print(resp.read())
+for tool in tools:
+    # continue
+    resp = client.post(
+        "https://api.github.com/orgs/install-pinned/repos",
+        json={
+            "name": tool,
+            "license_template": "mit",
+        },
+    )
+    print(resp)
+    print(resp.read())
 
 for tool in tools:
+    # continue
+    resp = client.patch(
+        f"https://api.github.com/repos/install-pinned/{tool}",
+        json={
+            "description": f"Securely install the latest {tool} release from PyPI.",
+            "homepage": "https://github.com/install-pinned",
+            "private": False,
+            "has_issues": False,
+            "has_projects": False,
+            "has_wiki": False,
+        },
+    )
+    print(resp)
+    print(resp.read())
+
+for tool in tools:
+    # continue
     if (repos_dir / tool).exists():
         def make_writable(function, path, _exception):
             os.chmod(path, stat.S_IWRITE)
@@ -64,6 +65,7 @@ for tool in tools:
     run(f"git clone git@github.com:install-pinned/{tool}.git", cwd=repos_dir)
 
 for tool in tools:
+    # continue
     os.chdir(repos_dir / tool)
 
     def write(filename: str, contents: str) -> None:
@@ -184,12 +186,32 @@ for tool in tools:
 
     run("git add --all")
     run('git commit -m "update repository from template"')
-    run("git push")
+    top_commit = run("git rev-list --max-parents=0 HEAD", capture_output=True, text=True).stdout.strip()
+    run(f"git tag -f add-commit-hash-here {top_commit}")
+    run(f"git tag -f v1 {top_commit}")  # dependabot somehow needs this.
+    run("git push -f origin main add-commit-hash-here v1")
 
 for tool in tools:
+    # continue
     resp = client.post(
         f"https://api.github.com/repos/install-pinned/{tool}/actions/workflows/update.yml/dispatches",
         json={"ref": "main"},
     )
     print(resp)
     print(resp.read())
+
+for tool in tools:
+    # continue
+    resp = client.get(f"https://github.com/marketplace/actions/install-pinned-{tool}")
+    print(f"{tool} marketplace release: {'✅' if resp.status_code == 200 else '❌'}")
+    if resp.status_code != 200:
+        print(f"https://github.com/install-pinned/{tool}/releases/new?tag=add-commit-hash-here")
+
+"""
+(() => {
+    document.getElementById("release_repository_action_release_attributes_published_on_marketplace").click();
+    document.getElementById("action-primary-category").value = "2";
+    document.getElementById("action-secondary-category").value = "6";
+    document.querySelector(".js-publish-release").click()
+})()
+"""

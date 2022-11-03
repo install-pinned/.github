@@ -10,6 +10,7 @@
   "pip-tools",
   "pyupgrade",
   "reorder_python_imports",
+  "ruff",
   "usort",
   "yapf",
   "yesqa"
