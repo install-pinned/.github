@@ -41,6 +41,7 @@ This means that you will not automatically get new (security) updates.
 - [docformatter](https://github.com/install-pinned/docformatter)
 - [isort](https://github.com/install-pinned/isort)
 - [maturin](https://github.com/install-pinned/maturin)
+- [maturin[zig]](https://github.com/install-pinned/maturin[zig])
 - [pdoc](https://github.com/install-pinned/pdoc)
 - [pip-tools](https://github.com/install-pinned/pip-tools)
 - [pyupgrade](https://github.com/install-pinned/pyupgrade)
