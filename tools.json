@@ -6,6 +6,7 @@
   "docformatter",
   "isort",
   "maturin",
+  "maturin[zig]",
   "pdoc",
   "pip-tools",
   "pyupgrade",

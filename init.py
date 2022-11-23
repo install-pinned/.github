@@ -24,12 +24,22 @@ repos_dir = (Path(__file__).parent / "repos").absolute()
 tools = json.loads(Path("tools.json").read_text())
 python_versions = ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
+
+def repo_name(tool: str) -> str:
+    return tool.replace("[", "-with-").replace(",","-").replace("]", "")
+
+
+def tool_name_without_extras(tool: str) -> str:
+    return tool.partition("[")[0]
+
+
 for tool in tools:
     # continue
+    repo = repo_name(tool)
     resp = client.post(
         "https://api.github.com/orgs/install-pinned/repos",
         json={
-            "name": tool,
+            "name": repo,
             "license_template": "mit",
         },
     )
@@ -38,8 +48,9 @@ for tool in tools:
 
 for tool in tools:
     # continue
+    repo = repo_name(tool)
     resp = client.patch(
-        f"https://api.github.com/repos/install-pinned/{tool}",
+        f"https://api.github.com/repos/install-pinned/{repo}",
         json={
             "description": f"Securely install the latest {tool} release from PyPI.",
             "homepage": "https://github.com/install-pinned",
@@ -54,19 +65,22 @@ for tool in tools:
 
 for tool in tools:
     # continue
-    if (repos_dir / tool).exists():
+    repo = repo_name(tool)
+    if (repos_dir / repo).exists():
         def make_writable(function, path, _exception):
             os.chmod(path, stat.S_IWRITE)
             function(path)
 
 
-        shutil.rmtree(repos_dir / tool, onerror=make_writable)
+        shutil.rmtree(repos_dir / repo, onerror=make_writable)
 
-    run(f"git clone git@github.com:install-pinned/{tool}.git", cwd=repos_dir)
+    run(f"git clone git@github.com:install-pinned/{repo}.git", cwd=repos_dir)
 
 for tool in tools:
     # continue
-    os.chdir(repos_dir / tool)
+    repo = repo_name(tool)
+    tool_name = tool_name_without_extras(tool)
+    os.chdir(repos_dir / repo)
 
     def write(filename: str, contents: str) -> None:
         f = Path(filename)
@@ -84,11 +98,11 @@ for tool in tools:
         "README.md",
         f"""
         
-        # install-pinned/{tool}
+        # install-pinned/{repo}
         
         ![](https://shields.io/badge/python-{'%20%7C%20'.join(python_versions)}-blue)
         
-        Securely install the latest [{tool}](https://pypi.org/project/{tool}/) release from PyPI.
+        Securely install the latest [{tool}](https://pypi.org/project/{tool_name}/) release from PyPI.
         
         This action installs a pinned version of **{tool}** and all its dependencies, \
         making sure that file hashes match. Pinning your dependencies stops supply chain attacks where an adversary \
@@ -100,7 +114,7 @@ for tool in tools:
         
         ```yaml
               - name: Install {tool} from PyPI
-                uses: install-pinned/{tool}@{last_release}
+                uses: install-pinned/{repo}@{last_release}
         ```
         
         ## Alternatives
@@ -118,7 +132,7 @@ for tool in tools:
         "action.yml",
         # language=yaml
         f"""\
-        name: 'install-pinned/{tool}'
+        name: 'install-pinned/{repo}'
         description: 'Securely install the latest {tool} release from PyPI'
         branding:
           icon: 'lock'
@@ -143,7 +157,7 @@ for tool in tools:
               with:
                 python-version: '{py}'
             - run: pip install pip-tools==6.9.0
-            - run: pip-compile --allow-unsafe --generate-hashes pins/requirements.in -o pins/requirements-{py}.txt 
+            - run: pip-compile --upgrade --allow-unsafe --generate-hashes pins/requirements.in -o pins/requirements-{py}.txt 
             """.rstrip()
         )
         for py in python_versions
@@ -174,7 +188,7 @@ for tool in tools:
                     git config --global user.name "install-pinned bot"
                     git config --global user.email "install-pinned@users.noreply.github.com"
                     git add --all
-                    ver=$(curl -Ls https://pypi.org/pypi/{tool}/json | jq -r .info.version)
+                    ver=$(curl -Ls https://pypi.org/pypi/{tool_name}/json | jq -r .info.version)
                     git commit -m "update pins ({tool} $ver)"
                     commit=$(git rev-parse HEAD)
                     sed -i -E "s/@[0-9a-f]{{40}}.*/@$commit  # $ver/g" README.md
@@ -193,8 +207,9 @@ for tool in tools:
 
 for tool in tools:
     # continue
+    repo = repo_name(tool)
     resp = client.post(
-        f"https://api.github.com/repos/install-pinned/{tool}/actions/workflows/update.yml/dispatches",
+        f"https://api.github.com/repos/install-pinned/{repo}/actions/workflows/update.yml/dispatches",
         json={"ref": "main"},
     )
     print(resp)
@@ -202,10 +217,11 @@ for tool in tools:
 
 for tool in tools:
     # continue
-    resp = client.get(f"https://github.com/marketplace/actions/install-pinned-{tool}")
+    repo = repo_name(tool)
+    resp = client.get(f"https://github.com/marketplace/actions/install-pinned-{repo}")
     print(f"{tool} marketplace release: {'✅' if resp.status_code == 200 else '❌'}")
     if resp.status_code != 200:
-        print(f"https://github.com/install-pinned/{tool}/releases/new?tag=add-commit-hash-here")
+        print(f"https://github.com/install-pinned/{repo}/releases/new?tag=add-commit-hash-here")
 
 """
 (() => {
