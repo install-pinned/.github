@@ -1,14 +1,14 @@
 ## Keep your CI pipeline secure with pinned installs.
-<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-<!-- auto-generated from make_readme.py, do not edit manually -->
-<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<!-- auto-generated from init.py, do not edit manually -->
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
 When you `pip install foo` in your CI pipeline, you trust 
 
  - PyPI,
  - the authors of `foo`, and 
  - all authors of all (sub)dependencies of `foo`
- 
+
 to not be compromised.[^1] If one of them is, an attacker may push a malicious package to PyPI which steals your code 
 and your repository secrets (e.g. deployment tokens).[^2]
 To mitigate this problem, you should _pin_ your dependencies, i.e. use a `requirements.txt`/`poetry.lock`/... lock file
@@ -41,7 +41,7 @@ This means that you will not automatically get new (security) updates.
 - [docformatter](https://github.com/install-pinned/docformatter)
 - [isort](https://github.com/install-pinned/isort)
 - [maturin](https://github.com/install-pinned/maturin)
-- [maturin[zig]](https://github.com/install-pinned/maturin[zig])
+- [maturin[zig]](https://github.com/install-pinned/maturin-with-zig)
 - [pdoc](https://github.com/install-pinned/pdoc)
 - [pip-tools](https://github.com/install-pinned/pip-tools)
 - [pyupgrade](https://github.com/install-pinned/pyupgrade)
@@ -50,7 +50,7 @@ This means that you will not automatically get new (security) updates.
 - [usort](https://github.com/install-pinned/usort)
 - [yapf](https://github.com/install-pinned/yapf)
 - [yesqa](https://github.com/install-pinned/yesqa)
- 
+
 Your tool is not on the list? Request it [here](https://github.com/install-pinned/.github/issues).
 
 #### Security
