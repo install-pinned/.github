@@ -17,16 +17,14 @@ When you `pip install foo` in your CI pipeline, you trust
  - the authors of `foo`, and 
  - all authors of all (sub)dependencies of `foo`
 
-to not be compromised.[^1] If one of them is, an attacker may push a malicious package to PyPI which steals your code 
-and your repository secrets (e.g. deployment tokens).[^2]
+to not be compromised. If one of them is, an attacker may push a malicious package to PyPI which steals your code 
+and your repository secrets (e.g. deployment tokens).[^1]
 To mitigate this problem, you should _pin_ your dependencies, i.e. use a `requirements.txt`/`poetry.lock`/... lock file
 that ensures only specific versions (with specific file hashes) are allowed. This changes the threat model from "trust 
 continuously" to "trust on first use".
 
-[^1]: More specifically, you hope that the respective PyPI packages are not compomised at the same time when your CI 
-      runs.
-[^2]: This often includes GitHub secrets that are not available to the current workflow.
-      By default, `GITHUB_TOKEN` can push new commits, which can be used to rewrite workflows and obtain other secrets.
+[^1]: This typically includes GitHub secrets that are not available to the current workflow.
+      By default, `GITHUB_TOKEN` can push new commits, which can be used to rewrite workflows and obtain more secrets.
 
 #### What are the actions here for?
 
