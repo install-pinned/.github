@@ -1,7 +1,15 @@
-## Keep your CI pipeline secure with pinned installs.
-<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-<!-- auto-generated from init.py, do not edit manually -->
-<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+## Keep your CI pipeline secure and deterministic with pinned installs.
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<!-- ⚠️auto-generated from init.py, do not edit manually ⚠️-->
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+
+### Deterministic
+
+When you `pip install foo`, you are getting the latest and greatest version of `foo` and all its dependencies.
+However, `foo`'s behavior (or that of its dependencies) may change over time. This introduces unexpected breakage into your CI pipeline,
+usually exactly at the time when you don't want it.
+
+### Secure
 
 When you `pip install foo` in your CI pipeline, you trust 
 
@@ -32,6 +40,8 @@ dependency for your application. Instead of adding a separate lock file to your 
 
 By pinning your tools, the dependency graph becomes static. 
 This means that you will not automatically get new (security) updates.
+To mitigate this, you can [set up Dependabot](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot#example-dependabotyml-file-for-github-actions)
+so that your pins are updated regularly.
 
 #### Supported tools:
 - [autoflake](https://github.com/install-pinned/autoflake)

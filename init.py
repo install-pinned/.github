@@ -39,10 +39,18 @@ readme_tool_list = "\n".join(
     for tool in tools
 )
 readme = f"""\
-## Keep your CI pipeline secure with pinned installs.
-<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-<!-- auto-generated from init.py, do not edit manually -->
-<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+## Keep your CI pipeline secure and deterministic with pinned installs.
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<!-- ⚠️auto-generated from init.py, do not edit manually ⚠️-->
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+
+### Deterministic
+
+When you `pip install foo`, you are getting the latest and greatest version of `foo` and all its dependencies.
+However, `foo`'s behavior (or that of its dependencies) may change over time. This introduces unexpected breakage into your CI pipeline,
+usually exactly at the time when you don't want it.
+
+### Secure
 
 When you `pip install foo` in your CI pipeline, you trust 
 
@@ -73,6 +81,8 @@ dependency for your application. Instead of adding a separate lock file to your 
 
 By pinning your tools, the dependency graph becomes static. 
 This means that you will not automatically get new (security) updates.
+To mitigate this, you can [set up Dependabot](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot#example-dependabotyml-file-for-github-actions)
+so that your pins are updated regularly.
 
 #### Supported tools:
 {readme_tool_list}
@@ -88,7 +98,7 @@ If you believe you've identified a security issue with install-pinned, please re
 
 
 for tool in tools:
-    # continue
+    continue
     repo = repo_name(tool)
     resp = client.post(
         "https://api.github.com/orgs/install-pinned/repos",
@@ -151,16 +161,20 @@ for tool in tools:
     write(
         "README.md",
         f"""
-        
         # install-pinned/{repo}
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+        <!-- ⚠️auto-generated from init.py, do not edit manually ⚠️-->
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
         
         ![](https://shields.io/badge/python-{'%20%7C%20'.join(python_versions)}-blue)
         
         Securely install the latest [{tool}](https://pypi.org/project/{tool_name}/) release from PyPI.
         
         This action installs a pinned version of **{tool}** and all its dependencies, \
-        making sure that file hashes match. Pinning your dependencies stops supply chain attacks where an adversary \
-        replaces {tool} or one of its dependencies with malicious code.
+        making sure that file hashes match. Pinning your dependencies:
+
+         1. Stops software supply chain attacks.
+         2. Makes sure your CI does not break unexpectedly.
         
         ## Usage
         
@@ -170,6 +184,9 @@ for tool in tools:
               - name: Install {tool} from PyPI
                 uses: install-pinned/{repo}@{last_release}
         ```
+        
+        You can [set up Dependabot](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot#example-dependabotyml-file-for-github-actions)
+        so that your pins are updated regularly.
         
         ## Alternatives
         
