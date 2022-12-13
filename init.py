@@ -96,7 +96,7 @@ If you believe you've identified a security issue with install-pinned, please re
 
 
 for tool in tools:
-    continue
+    # continue
     repo = repo_name(tool)
     resp = client.post(
         "https://api.github.com/orgs/install-pinned/repos",

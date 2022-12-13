@@ -52,6 +52,7 @@ so that your pins are updated regularly.
 - [maturin[zig]](https://github.com/install-pinned/maturin-with-zig)
 - [pdoc](https://github.com/install-pinned/pdoc)
 - [pip-tools](https://github.com/install-pinned/pip-tools)
+- [poetry](https://github.com/install-pinned/poetry)
 - [pyupgrade](https://github.com/install-pinned/pyupgrade)
 - [reorder_python_imports](https://github.com/install-pinned/reorder_python_imports)
 - [ruff](https://github.com/install-pinned/ruff)
