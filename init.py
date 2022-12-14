@@ -153,8 +153,8 @@ for tool in tools:
     # write("pins/requirements-3.10.txt", "")
 
     try:
-        last_release = re.search(r"(?<=@)[0-9a-f]{40}.+", Path("README.md").read_text())[0]
-    except Exception:
+        last_release = re.search(r"(?<=@)[0-9a-f]{40}.*", Path("README.md").read_text("utf8"))[0]
+    except TypeError:
         last_release = "ffffffffffffffffffffffffffffffffffffffff"
     write(
         "README.md",
@@ -211,8 +211,8 @@ for tool in tools:
           steps:
             - shell: bash
               run: |
-                pyver=$(python -c 'import sys; print(f"{{sys.version_info.major}}.{{sys.version_info.minor}}")')
-                pip install -r $GITHUB_ACTION_PATH/pins/requirements-$pyver.txt
+                pyver=$(python3 -c 'import sys; print(f"{{sys.version_info.major}}.{{sys.version_info.minor}}")')
+                python3 -m pip install -r $GITHUB_ACTION_PATH/pins/requirements-$pyver.txt
         """,
     )
 
