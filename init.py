@@ -154,7 +154,7 @@ for tool in tools:
 
     try:
         last_release = re.search(r"(?<=@)[0-9a-f]{40}.*", Path("README.md").read_text("utf8"))[0]
-    except TypeError:
+    except (TypeError, FileNotFoundError):
         last_release = "ffffffffffffffffffffffffffffffffffffffff"
     write(
         "README.md",

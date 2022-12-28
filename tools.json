@@ -3,6 +3,7 @@
   "autopep8",
   "black",
   "blacken-docs",
+  "build",
   "docformatter",
   "isort",
   "maturin",
@@ -13,6 +14,9 @@
   "pyupgrade",
   "reorder_python_imports",
   "ruff",
+  "setuptools",
+  "tox",
+  "twine",
   "usort",
   "yapf",
   "yesqa"
