@@ -18,6 +18,7 @@
   "tox",
   "twine",
   "usort",
+  "wheel",
   "yapf",
   "yesqa"
 ]

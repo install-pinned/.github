@@ -34,20 +34,12 @@ tools to use in your CI pipeline without any additional lock files.
 For example, you maybe want to run [black](https://github.com/psf/black) in your CI pipeline, but black is not a 
 dependency for your application. Instead of adding a separate lock file to your repository, you just use the [install-pinned/black](https://github.com/install-pinned/black) action.
 
-#### How do I get (security) updates?
+#### Why should I not use this?
 
-By pinning your tools, the dependency graph becomes static and you will not get (security) updates by default.
+By pinning your tools, the dependency graph becomes static. 
+This means that you will not automatically get new (security) updates.
 To mitigate this, you can [set up Dependabot](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot#example-dependabotyml-file-for-github-actions)
-so that your pins are updated regularly. A simple `.github/dependabot.yml` that works with **@install-pinned** looks like this:
-
-```yaml
-version: 2
-updates:
-  - package-ecosystem: github-actions
-    directory: "/"
-    schedule:
-      interval: "monthly"
- ```
+so that your pins are updated regularly.
 
 #### Supported tools:
 - [autoflake](https://github.com/install-pinned/autoflake)
@@ -69,6 +61,7 @@ updates:
 - [tox](https://github.com/install-pinned/tox)
 - [twine](https://github.com/install-pinned/twine)
 - [usort](https://github.com/install-pinned/usort)
+- [wheel](https://github.com/install-pinned/wheel)
 - [yapf](https://github.com/install-pinned/yapf)
 - [yesqa](https://github.com/install-pinned/yesqa)
 
