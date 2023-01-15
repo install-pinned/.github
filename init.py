@@ -165,6 +165,7 @@ for tool in tools:
         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
         
         ![](https://shields.io/badge/python-{'%20%7C%20'.join(python_versions)}-blue)
+        ![](https://shields.io/badge/runner%20os-Windows%20%7C%20Linux%20%7C%20macOS-blue)
         
         Securely install the latest [{tool}](https://pypi.org/project/{tool_name}/) release from PyPI.
         
@@ -212,25 +213,12 @@ for tool in tools:
             - shell: bash
               run: |
                 pyver=$(python3 -c 'import sys; print(f"{{sys.version_info.major}}.{{sys.version_info.minor}}")')
-                python3 -m pip install -r $GITHUB_ACTION_PATH/pins/requirements-$pyver.txt
+                python3 -m pip install -r $GITHUB_ACTION_PATH/pins/requirements-$pyver-$RUNNER_OS.txt
         """,
     )
 
     write("pins/requirements.in", f"{tool}\n")
 
-    versions = "\n".join(
-        dedent(
-            # language=yaml
-            f"""
-            - uses: actions/setup-python@v4
-              with:
-                python-version: '{py}'
-            - run: pip install pip-tools==6.9.0
-            - run: pip-compile --upgrade --allow-unsafe --generate-hashes pins/requirements.in -o pins/requirements-{py}.txt 
-            """.rstrip()
-        )
-        for py in python_versions
-    )
     write(
         ".github/workflows/update.yml",
         # language=yaml
@@ -244,13 +232,38 @@ for tool in tools:
 
         jobs:
           update_pins:
+            strategy:
+              matrix:
+                os: [windows-latest, ubuntu-latest, macos-latest]
+                py: {json.dumps(python_versions)}
+            runs-on: ${{{{ matrix.os }}}}
+            steps:
+              - uses: actions/checkout@v3
+                with:
+                  ref: main
+              - uses: actions/setup-python@v4
+                with:
+                  python-version: ${{{{ matrix.py }}}}
+              - run: pip install pip-tools==6.12.1
+              - run: mkdir new-pins
+              - run: pip-compile --upgrade --allow-unsafe --generate-hashes pins/requirements.in -o new-pins/requirements-${{{{ matrix.py }}}}-${{{{ runner.os }}}}.txt 
+              - uses: actions/upload-artifact@v3
+                with:
+                  name: requirements
+                  path: new-pins/
+
+          update_repo:
+            needs: update_pins
             runs-on: ubuntu-latest
             steps:
               - uses: actions/checkout@v3
                 with:
                   ref: main
-              {indent(versions, " " * 14)}
-
+              - run: rm pins/requirements-*.txt
+              - uses: actions/download-artifact@v3
+                with:
+                  name: requirements
+                  path: pins/
               - id: commit
                 run: |
                   if [ -n "$(git status --porcelain)" ]; then
