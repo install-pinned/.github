@@ -43,26 +43,22 @@ so that your pins are updated regularly.
 
 #### Supported tools:
 - [autoflake](https://github.com/install-pinned/autoflake)
-- [autopep8](https://github.com/install-pinned/autopep8)
 - [black](https://github.com/install-pinned/black)
-- [blacken-docs](https://github.com/install-pinned/blacken-docs)
 - [build](https://github.com/install-pinned/build)
-- [docformatter](https://github.com/install-pinned/docformatter)
 - [isort](https://github.com/install-pinned/isort)
 - [maturin](https://github.com/install-pinned/maturin)
 - [maturin[zig]](https://github.com/install-pinned/maturin-with-zig)
 - [pdoc](https://github.com/install-pinned/pdoc)
 - [pip-tools](https://github.com/install-pinned/pip-tools)
 - [poetry](https://github.com/install-pinned/poetry)
+- [pytest](https://github.com/install-pinned/pytest)
 - [pyupgrade](https://github.com/install-pinned/pyupgrade)
 - [reorder_python_imports](https://github.com/install-pinned/reorder_python_imports)
 - [ruff](https://github.com/install-pinned/ruff)
 - [setuptools](https://github.com/install-pinned/setuptools)
 - [tox](https://github.com/install-pinned/tox)
 - [twine](https://github.com/install-pinned/twine)
-- [usort](https://github.com/install-pinned/usort)
 - [wheel](https://github.com/install-pinned/wheel)
-- [yapf](https://github.com/install-pinned/yapf)
 - [yesqa](https://github.com/install-pinned/yesqa)
 
 Your tool is not on the list? Request it [here](https://github.com/install-pinned/.github/issues).

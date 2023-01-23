@@ -21,6 +21,7 @@ client = httpx.Client(
 )
 
 repos_dir = (here / "repos").absolute()
+repos_dir.mkdir(exist_ok=True)
 
 tools = json.loads((here / "tools.json").read_text())
 python_versions = ["3.7", "3.8", "3.9", "3.10", "3.11"]
@@ -259,7 +260,7 @@ for tool in tools:
               - uses: actions/checkout@v3
                 with:
                   ref: main
-              - run: rm pins/requirements-*.txt
+              - run: rm -f pins/requirements-*.txt
               - uses: actions/download-artifact@v3
                 with:
                   name: requirements
