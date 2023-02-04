@@ -48,6 +48,7 @@ so that your pins are updated regularly.
 - [isort](https://github.com/install-pinned/isort)
 - [maturin](https://github.com/install-pinned/maturin)
 - [maturin[zig]](https://github.com/install-pinned/maturin-with-zig)
+- [mypy](https://github.com/install-pinned/mypy)
 - [pdoc](https://github.com/install-pinned/pdoc)
 - [pip-tools](https://github.com/install-pinned/pip-tools)
 - [poetry](https://github.com/install-pinned/poetry)

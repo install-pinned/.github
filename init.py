@@ -137,7 +137,7 @@ for tool in tools:
 
         shutil.rmtree(repos_dir / repo, onerror=make_writable)
 
-    run(f"git clone git@github.com:install-pinned/{repo}.git", cwd=repos_dir)
+    run(f"git clone git@github.com:install-pinned/{repo}.git", shell=True, cwd=repos_dir)
 
 for tool in tools:
     # continue
@@ -281,12 +281,12 @@ for tool in tools:
         """,
     )
 
-    run("git add --all")
-    run('git commit -m "update repository from template"')
-    top_commit = run("git rev-list --max-parents=0 HEAD", capture_output=True, text=True).stdout.strip()
-    run(f"git tag -f add-commit-hash-here {top_commit}")
-    run(f"git tag -f v1 {top_commit}")  # dependabot somehow needs this.
-    run("git push -f origin main add-commit-hash-here v1")
+    run("git add --all", shell=True)
+    run('git commit -m "update repository from template"', shell=True)
+    top_commit = run("git rev-list --max-parents=0 HEAD", shell=True, capture_output=True, text=True).stdout.strip()
+    run(f"git tag -f add-commit-hash-here {top_commit}", shell=True)
+    run(f"git tag -f v1 {top_commit}", shell=True)  # dependabot somehow needs this.
+    run("git push -f origin main add-commit-hash-here v1", shell=True)
 
 for tool in tools:
     # continue
@@ -298,6 +298,7 @@ for tool in tools:
     print(resp)
     print(resp.read())
 
+needs_marketplace = False
 for tool in tools:
     # continue
     repo = repo_name(tool)
@@ -305,12 +306,14 @@ for tool in tools:
     print(f"{tool} marketplace release: {'✅' if resp.status_code == 200 else '❌'}")
     if resp.status_code != 200:
         print(f"https://github.com/install-pinned/{repo}/releases/new?tag=add-commit-hash-here")
+        needs_marketplace = True
 
-"""
-(() => {
-    document.getElementById("release_repository_action_release_attributes_published_on_marketplace").click();
-    document.getElementById("action-primary-category").value = "2";
-    document.getElementById("action-secondary-category").value = "6";
-    document.querySelector(".js-publish-release").click()
-})()
-"""
+if needs_marketplace:
+    print(dedent("""
+        (() => {
+            document.getElementById("release_repository_action_release_attributes_published_on_marketplace").click();
+            document.getElementById("action-primary-category").value = "2";
+            document.getElementById("action-secondary-category").value = "6";
+            document.querySelector(".js-publish-release").click()
+        })()
+    """))

@@ -5,6 +5,7 @@
   "isort",
   "maturin",
   "maturin[zig]",
+  "mypy",
   "pdoc",
   "pip-tools",
   "poetry",
