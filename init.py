@@ -24,7 +24,6 @@ repos_dir = (here / "repos").absolute()
 repos_dir.mkdir(exist_ok=True)
 
 tools = json.loads((here / "tools.json").read_text())
-python_versions = ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
 
 def repo_name(tool: str) -> str:
@@ -36,7 +35,7 @@ def tool_name_without_extras(tool: str) -> str:
 
 
 readme_tool_list = "\n".join(
-    f"- [{tool}](https://github.com/install-pinned/{repo_name(tool)})"
+    f"- [![latest pins](https://github.com/install-pinned/{repo_name(tool)}/actions/workflows/update.yml/badge.svg?branch=main) {tool}](https://github.com/install-pinned/{repo_name(tool)})"
     for tool in tools
 )
 readme = f"""\
@@ -150,9 +149,6 @@ for tool in tools:
         f.parent.mkdir(parents=True, exist_ok=True)
         f.write_text(dedent(contents), encoding="utf-8", newline="\n")
 
-    # modify one of this pins to make sure that the CI runs.
-    # write("pins/requirements-3.10.txt", "")
-
     try:
         last_release = re.search(r"(?<=@)[0-9a-f]{40}.*", Path("README.md").read_text("utf8"))[0]
     except (TypeError, FileNotFoundError):
@@ -165,7 +161,6 @@ for tool in tools:
         <!-- ⚠️auto-generated from init.py, do not edit manually ⚠️-->
         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
         
-        ![](https://shields.io/badge/python-{'%20%7C%20'.join(python_versions)}-blue)
         ![](https://shields.io/badge/runner%20os-Windows%20%7C%20Linux%20%7C%20macOS-blue)
         
         Securely install the latest [{tool}](https://pypi.org/project/{tool_name}/) release from PyPI.
@@ -190,7 +185,7 @@ for tool in tools:
         
         ## Alternatives
         
-        This action is a relatively simple wrapper around the fantastic [pip-tools](https://pip-tools.rtfd.io) \
+        This action is a relatively simple wrapper around [poetry](https://python-poetry.org/) \
         and is most useful if there is no existing `requirements.txt`/`poetry.lock`/... infrastructure in place. \
         If you already pin all your dependencies in a single place, you don't need it!
         
@@ -212,19 +207,15 @@ for tool in tools:
           using: "composite"
           steps:
             - shell: bash
-              run: |
-                pyver=$(python3 -c 'import sys; print(f"{{sys.version_info.major}}.{{sys.version_info.minor}}")')
-                python3 -m pip install -r $GITHUB_ACTION_PATH/pins/requirements-$pyver-$RUNNER_OS.txt
+              run: python3 -m pip install -r $GITHUB_ACTION_PATH/requirements.txt
         """,
     )
-
-    write("pins/requirements.in", f"{tool}\n")
 
     write(
         ".github/workflows/update.yml",
         # language=yaml
         f"""
-        name: "update pins"
+        name: "latest pins"
 
         on:
           workflow_dispatch:
@@ -233,40 +224,48 @@ for tool in tools:
 
         jobs:
           update_pins:
-            strategy:
-              matrix:
-                os: [windows-latest, ubuntu-latest, macos-latest]
-                py: {json.dumps(python_versions)}
-            runs-on: ${{{{ matrix.os }}}}
+            runs-on: ubuntu-latest
             steps:
               - uses: actions/checkout@v3
                 with:
                   ref: main
               - uses: actions/setup-python@v4
                 with:
-                  python-version: ${{{{ matrix.py }}}}
-              - run: pip install pip-tools==6.12.1
-              - run: mkdir new-pins
-              - run: pip-compile --upgrade --allow-unsafe --generate-hashes pins/requirements.in -o new-pins/requirements-${{{{ matrix.py }}}}-${{{{ runner.os }}}}.txt 
-              - uses: actions/upload-artifact@v3
-                with:
-                  name: requirements
-                  path: new-pins/
+                  python-version: 3.11
 
-          update_repo:
-            needs: update_pins
-            runs-on: ubuntu-latest
-            steps:
-              - uses: actions/checkout@v3
-                with:
-                  ref: main
-              - run: rm -f pins/requirements-*.txt
-              - uses: actions/download-artifact@v3
-                with:
-                  name: requirements
-                  path: pins/
-              - id: commit
+              - name: Install poetry from PyPI
+                uses: install-pinned/poetry@d95a199a06c2eb4e23169dd4f7139bb645b9dbe2  # 1.3.2
+                
+              - run: poetry init --name lockenv --python "*" --directory ${{{{ runner.temp }}}} --no-interaction
+              - name: "Run poetry add {tool} ..."
+                shell: python
                 run: |
+                  import re
+                  import subprocess
+                  try:
+                      subprocess.run([
+                          "poetry", "add",
+                          "--directory", "${{{{ runner.temp }}}}",
+                          "--no-interaction",
+                          "--lock",
+                          "{tool}"
+                      ], check=True, capture_output=True, text=True)
+                  except subprocess.CalledProcessError as e:
+                      if m := re.search(r'set the `python` property to "(.+?)"', e.stderr):
+                          print(f"Retrying with --python {{m[1]}}...")
+                          subprocess.run([
+                              "poetry", "add",
+                              "--directory", "${{{{ runner.temp }}}}",
+                              "--no-interaction",
+                              "--lock",
+                              "--python", m[1],
+                              "{tool}"
+                          ], check=True)
+                      else:
+                          raise
+              - run: poetry export -o requirements.txt --directory ${{{{ runner.temp }}}} --no-interaction
+
+              - run: |
                   if [ -n "$(git status --porcelain)" ]; then
                     git config --global user.name "install-pinned bot"
                     git config --global user.email "install-pinned@users.noreply.github.com"
