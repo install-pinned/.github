@@ -24,7 +24,7 @@ repos_dir = (here / "repos").absolute()
 repos_dir.mkdir(exist_ok=True)
 
 tools = json.loads((here / "tools.json").read_text())
-
+min_python_version = "3.8"
 
 def repo_name(tool: str) -> str:
     return tool.replace("[", "-with-").replace(",","-").replace("]", "")
@@ -161,6 +161,7 @@ for tool in tools:
         <!-- ⚠️auto-generated from init.py, do not edit manually ⚠️-->
         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
         
+        ![](https://shields.io/badge/python-%3E={min_python_version}-blue)
         ![](https://shields.io/badge/runner%20os-Windows%20%7C%20Linux%20%7C%20macOS-blue)
         
         Securely install the latest [{tool}](https://pypi.org/project/{tool_name}/) release from PyPI.
@@ -236,33 +237,40 @@ for tool in tools:
               - name: Install poetry from PyPI
                 uses: install-pinned/poetry@d95a199a06c2eb4e23169dd4f7139bb645b9dbe2  # 1.3.2
                 
-              - run: poetry init --name lockenv --python "*" --directory ${{{{ runner.temp }}}} --no-interaction
+              - run: poetry init --name lockenv --python "^{min_python_version}" --directory ${{{{ runner.temp }}}} --no-interaction
               - name: "Run poetry add {tool} ..."
                 shell: python
                 run: |
-                  import re
-                  import subprocess
-                  try:
-                      subprocess.run([
-                          "poetry", "add",
-                          "--directory", "${{{{ runner.temp }}}}",
-                          "--no-interaction",
-                          "--lock",
-                          "{tool}"
-                      ], check=True, capture_output=True, text=True)
-                  except subprocess.CalledProcessError as e:
-                      if m := re.search(r'set the `python` property to "(.+?)"', e.stderr):
-                          print(f"Retrying with --python {{m[1]}}...")
-                          subprocess.run([
-                              "poetry", "add",
-                              "--directory", "${{{{ runner.temp }}}}",
-                              "--no-interaction",
-                              "--lock",
-                              "--python", m[1],
-                              "{tool}"
-                          ], check=True)
-                      else:
-                          raise
+                    import re
+                    import subprocess
+                  
+                    def add(pyver: str):
+                        subprocess.run([
+                            "poetry", "add",
+                            "--directory", "${{{{ runner.temp }}}}",
+                            "--no-interaction",
+                            "--lock",
+                            "--python", pyver,
+                            "{tool}"
+                        ], check=True, capture_output=True, text=True)
+                      
+                    try:
+                        add("*")
+                    except subprocess.CalledProcessError as e:
+                        if (m := re.search(r'set the `python` property to "(.+?)"', e.stderr)) is None:
+                            raise
+                        print(f"Retrying with --python {{m[1]}}...")
+                        
+                        try:
+                            add(m[1])
+                        except subprocess.CalledProcessError as e:
+                            if (m := re.search(r'set the `python` property to "(.+?)"', e.stderr)) is None:
+                                raise
+                            print(f"Retrying with --python {{m[1]}}...")
+                            
+                            # We need to retry twice for some projects.
+                            add(m[1])
+                        
               - run: poetry export -o requirements.txt --directory ${{{{ runner.temp }}}} --no-interaction
 
               - run: |

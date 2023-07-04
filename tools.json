@@ -5,6 +5,7 @@
   "isort",
   "maturin",
   "maturin[zig]",
+  "mitmproxy",
   "mypy",
   "pdoc",
   "pip-tools",
