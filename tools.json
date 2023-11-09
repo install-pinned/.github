@@ -7,6 +7,8 @@
   "maturin[zig]",
   "mitmproxy",
   "mypy",
+  "pdm",
+  "pdm-backend",
   "pdoc",
   "pip-tools",
   "poetry",

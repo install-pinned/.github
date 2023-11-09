@@ -50,6 +50,8 @@ so that your pins are updated regularly.
 - [![latest pins](https://github.com/install-pinned/maturin-with-zig/actions/workflows/update.yml/badge.svg?branch=main) maturin[zig]](https://github.com/install-pinned/maturin-with-zig)
 - [![latest pins](https://github.com/install-pinned/mitmproxy/actions/workflows/update.yml/badge.svg?branch=main) mitmproxy](https://github.com/install-pinned/mitmproxy)
 - [![latest pins](https://github.com/install-pinned/mypy/actions/workflows/update.yml/badge.svg?branch=main) mypy](https://github.com/install-pinned/mypy)
+- [![latest pins](https://github.com/install-pinned/pdm/actions/workflows/update.yml/badge.svg?branch=main) pdm](https://github.com/install-pinned/pdm)
+- [![latest pins](https://github.com/install-pinned/pdm-backend/actions/workflows/update.yml/badge.svg?branch=main) pdm-backend](https://github.com/install-pinned/pdm-backend)
 - [![latest pins](https://github.com/install-pinned/pdoc/actions/workflows/update.yml/badge.svg?branch=main) pdoc](https://github.com/install-pinned/pdoc)
 - [![latest pins](https://github.com/install-pinned/pip-tools/actions/workflows/update.yml/badge.svg?branch=main) pip-tools](https://github.com/install-pinned/pip-tools)
 - [![latest pins](https://github.com/install-pinned/poetry/actions/workflows/update.yml/badge.svg?branch=main) poetry](https://github.com/install-pinned/poetry)
