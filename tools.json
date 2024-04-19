@@ -2,6 +2,7 @@
   "autoflake",
   "black",
   "build",
+  "codecov-cli",
   "isort",
   "maturin",
   "maturin[zig]",

@@ -45,6 +45,7 @@ so that your pins are updated regularly.
 - [![latest pins](https://github.com/install-pinned/autoflake/actions/workflows/update.yml/badge.svg?branch=main) autoflake](https://github.com/install-pinned/autoflake)
 - [![latest pins](https://github.com/install-pinned/black/actions/workflows/update.yml/badge.svg?branch=main) black](https://github.com/install-pinned/black)
 - [![latest pins](https://github.com/install-pinned/build/actions/workflows/update.yml/badge.svg?branch=main) build](https://github.com/install-pinned/build)
+- [![latest pins](https://github.com/install-pinned/codecov-cli/actions/workflows/update.yml/badge.svg?branch=main) codecov-cli](https://github.com/install-pinned/codecov-cli)
 - [![latest pins](https://github.com/install-pinned/isort/actions/workflows/update.yml/badge.svg?branch=main) isort](https://github.com/install-pinned/isort)
 - [![latest pins](https://github.com/install-pinned/maturin/actions/workflows/update.yml/badge.svg?branch=main) maturin](https://github.com/install-pinned/maturin)
 - [![latest pins](https://github.com/install-pinned/maturin-with-zig/actions/workflows/update.yml/badge.svg?branch=main) maturin[zig]](https://github.com/install-pinned/maturin-with-zig)
