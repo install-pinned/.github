@@ -19,7 +19,9 @@
   "ruff",
   "setuptools",
   "tox",
+  "tox-uv",
   "twine",
+  "uv",
   "wheel",
   "yesqa"
 ]

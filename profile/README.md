@@ -62,7 +62,9 @@ so that your pins are updated regularly.
 - [![latest pins](https://github.com/install-pinned/ruff/actions/workflows/update.yml/badge.svg?branch=main) ruff](https://github.com/install-pinned/ruff)
 - [![latest pins](https://github.com/install-pinned/setuptools/actions/workflows/update.yml/badge.svg?branch=main) setuptools](https://github.com/install-pinned/setuptools)
 - [![latest pins](https://github.com/install-pinned/tox/actions/workflows/update.yml/badge.svg?branch=main) tox](https://github.com/install-pinned/tox)
+- [![latest pins](https://github.com/install-pinned/tox-uv/actions/workflows/update.yml/badge.svg?branch=main) tox-uv](https://github.com/install-pinned/tox-uv)
 - [![latest pins](https://github.com/install-pinned/twine/actions/workflows/update.yml/badge.svg?branch=main) twine](https://github.com/install-pinned/twine)
+- [![latest pins](https://github.com/install-pinned/uv/actions/workflows/update.yml/badge.svg?branch=main) uv](https://github.com/install-pinned/uv)
 - [![latest pins](https://github.com/install-pinned/wheel/actions/workflows/update.yml/badge.svg?branch=main) wheel](https://github.com/install-pinned/wheel)
 - [![latest pins](https://github.com/install-pinned/yesqa/actions/workflows/update.yml/badge.svg?branch=main) yesqa](https://github.com/install-pinned/yesqa)
 

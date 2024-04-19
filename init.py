@@ -298,6 +298,13 @@ for tool in tools:
 for tool in tools:
     # continue
     repo = repo_name(tool)
+
+    resp = client.put(
+        f"https://api.github.com/repos/install-pinned/{repo}/actions/workflows/update.yml/enable",
+    )
+    print(resp)
+    print(resp.read())
+
     resp = client.post(
         f"https://api.github.com/repos/install-pinned/{repo}/actions/workflows/update.yml/dispatches",
         json={"ref": "main"},
