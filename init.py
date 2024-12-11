@@ -186,8 +186,8 @@ for tool in tools:
         
         ## Alternatives
         
-        This action is a relatively simple wrapper around [poetry](https://python-poetry.org/) \
-        and is most useful if there is no existing `requirements.txt`/`poetry.lock`/... infrastructure in place. \
+        This action is a relatively simple wrapper around [uv](https://docs.astral.sh/uv/) \
+        and is most useful if there is no existing `requirements.txt`/`uv.lock`/... infrastructure in place. \
         If you already pin all your dependencies in a single place, you don't need it!
         
         ## More Details
@@ -230,48 +230,15 @@ for tool in tools:
               - uses: actions/checkout@v3
                 with:
                   ref: main
-              - uses: actions/setup-python@v4
-                with:
-                  python-version: 3.11
 
-              - name: Install poetry from PyPI
-                uses: install-pinned/poetry@d95a199a06c2eb4e23169dd4f7139bb645b9dbe2  # 1.3.2
+              - name: Install uv
+                uses: astral-sh/setup-uv@f064c84ddba8609eaa6f191659f0f166260f175b
+                with:
+                    version: "0.5.7"
                 
-              - run: poetry init --name lockenv --python "^{min_python_version}" --directory ${{{{ runner.temp }}}} --no-interaction
-              - name: "Run poetry add {tool} ..."
-                shell: python
-                run: |
-                    import re
-                    import subprocess
-                  
-                    def add(pyver: str):
-                        subprocess.run([
-                            "poetry", "add",
-                            "--directory", "${{{{ runner.temp }}}}",
-                            "--no-interaction",
-                            "--lock",
-                            "--python", pyver,
-                            "{tool}"
-                        ], check=True, capture_output=True, text=True)
-                      
-                    try:
-                        add("*")
-                    except subprocess.CalledProcessError as e:
-                        if (m := re.search(r'set the `python` property to "(.+?)"', e.stderr)) is None:
-                            raise
-                        print(f"Retrying with --python {{m[1]}}...")
-                        
-                        try:
-                            add(m[1])
-                        except subprocess.CalledProcessError as e:
-                            if (m := re.search(r'set the `python` property to "(.+?)"', e.stderr)) is None:
-                                raise
-                            print(f"Retrying with --python {{m[1]}}...")
-                            
-                            # We need to retry twice for some projects.
-                            add(m[1])
-                        
-              - run: poetry export -o requirements.txt --directory ${{{{ runner.temp }}}} --no-interaction
+              - run: uv --directory ${{{{ runner.temp }}}} init --no-workspace --no-readme --name install-pinned
+              - run: uv --directory ${{{{ runner.temp }}}} add --no-sync {tool}
+              - run: uv --directory ${{{{ runner.temp }}}} export -o ${{{{ github.workspace }}}}/requirements.txt
 
               - run: |
                   if [ -n "$(git status --porcelain)" ]; then
