@@ -236,7 +236,12 @@ for tool in tools:
                 with:
                     version: "0.5.7"
                 
-              - run: uv --directory ${{{{ runner.temp }}}} init --no-workspace --no-readme --name install-pinned
+              - run: uv --directory ${{{{ runner.temp }}}} init
+                    --name install-pinned
+                    --no-workspace
+                    --no-readme
+                    --no-pin-python
+                    --python 3.8
               - run: uv --directory ${{{{ runner.temp }}}} add --no-sync {tool}
               - run: uv --directory ${{{{ runner.temp }}}} export -o ${{{{ github.workspace }}}}/requirements.txt
 
